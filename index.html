@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clini KAL - Cabinet de Médecine Interne</title>
+    <meta name="description" content="Cabinet de Médecine Interne - Diagnostic, suivi et prise en charge globale">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary-teal: #4FD1C5;
+            --dark-teal: #2C7A7B;
+            --text-dark: #2D3748;
+            --bg-light: #F7FAFC;
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #0A3A3A;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Background image with overlay and blur */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('bg.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px);
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        /* Dark teal overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44, 122, 123, 0.85) 0%, rgba(10, 58, 58, 0.9) 100%);
+            z-index: 1;
+        }
+        
+        /* Content container */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        
+        /* Button hover effects */
+        .btn-primary {
+            background-color: var(--primary-teal);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover, .btn-primary:active {
+            background-color: var(--dark-teal);
+            transform: scale(0.98);
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: var(--dark-teal);
+            border: 2px solid var(--primary-teal);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-outline:hover, .btn-outline:active {
+            background-color: var(--primary-teal);
+            color: white;
+            transform: scale(0.98);
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--dark-teal);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover, .btn-secondary:active {
+            background-color: rgba(79, 209, 197, 0.15);
+            transform: scale(0.98);
+        }
+        
+        /* Card styling */
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Services section */
+        .services-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        
+        .services-content.open {
+            max-height: 2000px;
+        }
+        
+        /* Language toggle */
+        .lang-toggle {
+            display: inline-flex;
+            background: var(--bg-light);
+            border-radius: 25px;
+            padding: 4px;
+        }
+        
+        .lang-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .lang-btn.active {
+            background: var(--primary-teal);
+            color: white;
+        }
+        
+        .lang-btn:not(.active) {
+            color: var(--text-dark);
+        }
+        
+        /* Arabic text styling */
+        .arabic-text {
+            direction: rtl;
+            text-align: right;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        /* Icon styling */
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(79, 209, 197, 0.1);
+            color: var(--dark-teal);
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Content visibility toggle */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper min-h-screen py-8 px-4">
+        <div class="max-w-md mx-auto">
+            
+            <!-- Header Card -->
+            <div class="card p-8 mb-4 text-center fade-in delay-1">
+                <!-- Logo -->
+                <div class="flex justify-center mb-4">
+                    <img src="logo.jpeg" alt="Clini KAL Logo" class="w-24 h-24 object-contain">
+                </div>
+                
+                <!-- Clinic Name -->
+                <h1 class="text-2xl font-bold mb-2" style="color: var(--dark-teal);">
+                    Clini KAL
+                </h1>
+                
+                <!-- Subtitle -->
+                <p class="text-lg font-medium mb-3" style="color: var(--text-dark);">
+                    Cabinet de Médecine Interne
+                </p>
+                
+                <!-- Description -->
+                <p class="text-sm" style="color: #718096;">
+                    Diagnostic, suivi et prise en charge globale
+                </p>
+            </div>
+            
+            <!-- Primary Action Buttons -->
+            <div class="space-y-3 mb-4">
+                <!-- Call Button -->
+                <a href="tel:+213XXXXXXXXX" class="btn-outline block w-full py-4 px-6 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3 fade-in delay-2">
+                    <i class="fas fa-phone text-xl"></i>
+                    <span>Appeler</span>
+                </a>
+                
+                <!-- WhatsApp Button -->
+                <a href="https://wa.me/213XXXXXXXXX" class="btn-primary block w-full py-4 px-6 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3 fade-in delay-3">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+            
+            <!-- Secondary Actions -->
+            <div class="space-y-3 mb-4">
+                <!-- Location Button -->
+                <a href="https://maps.google.com/?q=Clini+KAL" target="_blank" class="btn-secondary card block w-full py-3 px-5 rounded-xl font-medium flex items-center gap-3 fade-in delay-4">
+                    <div class="icon-circle">
+                        <i class="fas fa-map-marker-alt text-xl"></i>
+                    </div>
+                    <span class="text-left flex-1">📍 Localisation</span>
+                    <i class="fas fa-chevron-right text-sm" style="color: #A0AEC0;"></i>
+                </a>
+                
+                <!-- Hours Button -->
+                <button onclick="toggleSection('hours')" class="btn-secondary card block w-full py-3 px-5 rounded-xl font-medium flex items-center gap-3 fade-in delay-4">
+                    <div class="icon-circle">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                    <span class="text-left flex-1">🕒 Horaires</span>
+                    <i class="fas fa-chevron-right text-sm" style="color: #A0AEC0;"></i>
+                </button>
+            </div>
+            
+            <!-- Hours Section (Hidden by default) -->
+            <div id="hours-section" class="card p-6 mb-4 content-section">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2" style="color: var(--dark-teal);">
+                    <i class="fas fa-clock"></i>
+                    Horaires d'ouverture
+                </h3>
+                <div class="space-y-2 text-sm" style="color: var(--text-dark);">
+                    <div class="flex justify-between py-2 border-b border-gray-100">
+                        <span class="font-medium">Dimanche - Jeudi</span>
+                        <span>08:00 - 17:00</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-100">
+                        <span class="font-medium">Samedi</span>
+                        <span>08:00 - 13:00</span>
+                    </div>
+                    <div class="flex justify-between py-2">
+                        <span class="font-medium">Vendredi</span>
+                        <span style="color: #E53E3E;">Fermé</span>
+                    </div>
+                </div>
+                <button onclick="toggleSection('hours')" class="mt-4 w-full py-2 text-sm font-medium" style="color: var(--dark-teal);">
+                    Fermer
+                </button>
+            </div>
+            
+            <!-- Services Button -->
+            <button onclick="toggleSection('services')" class="btn-secondary card block w-full py-3 px-5 rounded-xl font-medium flex items-center gap-3 mb-4 fade-in delay-4">
+                <div class="icon-circle">
+                    <i class="fas fa-stethoscope text-xl"></i>
+                </div>
+                <span class="text-left flex-1">🩺 Spécialités & Examens</span>
+                <i class="fas fa-chevron-right text-sm" style="color: #A0AEC0;"></i>
+            </button>
+            
+            <!-- Services Section (Hidden by default) -->
+            <div id="services-section" class="card p-6 mb-4 content-section">
+                <!-- Language Toggle -->
+                <div class="flex justify-center mb-6">
+                    <div class="lang-toggle">
+                        <button class="lang-btn active" onclick="switchLanguage('fr')" id="lang-fr">
+                            🇫🇷 Français
+                        </button>
+                        <button class="lang-btn" onclick="switchLanguage('ar')" id="lang-ar">
+                            🇩🇿 العربية
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- French Content -->
+                <div id="content-fr" class="content-section active">
+                    <!-- Pathologies -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold mb-3 flex items-center gap-2" style="color: var(--dark-teal);">
+                            <i class="fas fa-brain"></i>
+                            🧠 Pathologies prises en charge
+                        </h3>
+                        <ul class="space-y-2 text-sm" style="color: var(--text-dark);">
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Maladies digestives et hépatiques</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Pathologies hémorroïdaires</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Diabète et hypertension artérielle</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Maladies de la thyroïde</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Anémie</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Maladies auto-immunes et rhumatismales</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Examens -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-3 flex items-center gap-2" style="color: var(--dark-teal);">
+                            <i class="fas fa-vial"></i>
+                            🧪 Examens & explorations
+                        </h3>
+                        <ul class="space-y-2 text-sm" style="color: var(--text-dark);">
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Endoscopie digestive (avec ou sans anesthésie)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Échographie abdominale</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>Échographie thyroïdienne</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>ECG</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span style="color: var(--primary-teal);">•</span>
+                                <span>MAPA (mesure ambulatoire de la pression artérielle 24h)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Arabic Content -->
+                <div id="content-ar" class="content-section arabic-text">
+                    <!-- Pathologies -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold mb-3 flex items-center gap-2 justify-end" style="color: var(--dark-teal);">
+                            <span>🧠 الأمراض التي يتم التكفل بها</span>
+                            <i class="fas fa-brain"></i>
+                        </h3>
+                        <ul class="space-y-2 text-sm" style="color: var(--text-dark);">
+                            <li class="flex items-start gap-2">
+                                <span>أمراض الجهاز الهضمي والكبد</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>البواسير</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>داء السكري وارتفاع ضغط الدم</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>أمراض الغدة الدرقية</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>فقر الدم</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>أمراض المناعة الذاتية والروماتيزم</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Examens -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-3 flex items-center gap-2 justify-end" style="color: var(--dark-teal);">
+                            <span>🧪 الفحوصات الطبية</span>
+                            <i class="fas fa-vial"></i>
+                        </h3>
+                        <ul class="space-y-2 text-sm" style="color: var(--text-dark);">
+                            <li class="flex items-start gap-2">
+                                <span>التنظير الهضمي (مع أو بدون تخدير)</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>الإيكوغرافيا البطنية</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>إيكوغرافيا الغدة الدرقية</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>تخطيط القلب</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span>مراقبة ضغط الدم لمدة 24 ساعة</span>
+                                <span style="color: var(--primary-teal);">•</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <button onclick="toggleSection('services')" class="mt-6 w-full py-2 text-sm font-medium" style="color: var(--dark-teal);">
+                    Fermer
+                </button>
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center mt-8 mb-4">
+                <p class="text-sm" style="color: rgba(255, 255, 255, 0.7);">
+                    © 2025 Clini KAL - Cabinet de Médecine Interne
+                </p>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        // Toggle sections
+        function toggleSection(sectionName) {
+            const section = document.getElementById(sectionName + '-section');
+            const allSections = document.querySelectorAll('.content-section');
+            
+            // If clicking the same section, toggle it
+            if (section.classList.contains('active')) {
+                section.classList.remove('active');
+            } else {
+                // Close all sections except language content sections
+                allSections.forEach(s => {
+                    if (!s.id.startsWith('content-')) {
+                        s.classList.remove('active');
+                    }
+                });
+                // Open clicked section
+                section.classList.add('active');
+                
+                // Smooth scroll to section
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+        
+        // Switch language in services section
+        function switchLanguage(lang) {
+            const frBtn = document.getElementById('lang-fr');
+            const arBtn = document.getElementById('lang-ar');
+            const frContent = document.getElementById('content-fr');
+            const arContent = document.getElementById('content-ar');
+            
+            if (lang === 'fr') {
+                frBtn.classList.add('active');
+                arBtn.classList.remove('active');
+                frContent.classList.add('active');
+                arContent.classList.remove('active');
+            } else {
+                arBtn.classList.add('active');
+                frBtn.classList.remove('active');
+                arContent.classList.add('active');
+                frContent.classList.remove('active');
+            }
+        }
+        
+        // Prevent double-tap zoom on buttons
+        document.addEventListener('touchend', function(e) {
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') {
+                e.preventDefault();
+                e.target.click();
+            }
+        }, false);
+    </script>
+</body>
+</html>
